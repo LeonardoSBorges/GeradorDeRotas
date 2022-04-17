@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32126.317
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeradorDeRotasPerson", "GeradorDeRotas\GeradorDeRotasPerson.csproj", "{722D4B04-6B62-41C3-B424-EB8837425EFD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelShare", "ModelShare\ModelShare.csproj", "{A18518B1-3D93-43DC-86F2-46C52A9DF46B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AddressGeradorDeRotas", "AddressGeradorDeRotas\AddressGeradorDeRotas.csproj", "{7E47A576-B8BB-46BB-925C-452C68B4A204}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeradorDeRotasTeams", "GeradorDeRotasTeams\GeradorDeRotasTeams.csproj", "{56E4F845-30CF-42E2-817D-299BC53F7EF3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManipulationExcel", "ManipulationExcel\ManipulationExcel.csproj", "{5C158F98-10B2-42E1-A335-BA4A26426732}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeradorDeRotasMVC", "GeradorDeRotasMVC\GeradorDeRotasMVC.csproj", "{3B8C6F00-5F5A-4148-B109-F0BB9AC62F68}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{722D4B04-6B62-41C3-B424-EB8837425EFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{722D4B04-6B62-41C3-B424-EB8837425EFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{722D4B04-6B62-41C3-B424-EB8837425EFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{722D4B04-6B62-41C3-B424-EB8837425EFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A18518B1-3D93-43DC-86F2-46C52A9DF46B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A18518B1-3D93-43DC-86F2-46C52A9DF46B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A18518B1-3D93-43DC-86F2-46C52A9DF46B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A18518B1-3D93-43DC-86F2-46C52A9DF46B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E47A576-B8BB-46BB-925C-452C68B4A204}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E47A576-B8BB-46BB-925C-452C68B4A204}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E47A576-B8BB-46BB-925C-452C68B4A204}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E47A576-B8BB-46BB-925C-452C68B4A204}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56E4F845-30CF-42E2-817D-299BC53F7EF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56E4F845-30CF-42E2-817D-299BC53F7EF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56E4F845-30CF-42E2-817D-299BC53F7EF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56E4F845-30CF-42E2-817D-299BC53F7EF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C158F98-10B2-42E1-A335-BA4A26426732}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C158F98-10B2-42E1-A335-BA4A26426732}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C158F98-10B2-42E1-A335-BA4A26426732}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C158F98-10B2-42E1-A335-BA4A26426732}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B8C6F00-5F5A-4148-B109-F0BB9AC62F68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B8C6F00-5F5A-4148-B109-F0BB9AC62F68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B8C6F00-5F5A-4148-B109-F0BB9AC62F68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B8C6F00-5F5A-4148-B109-F0BB9AC62F68}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9C1B597B-6B5E-4B01-92A5-C2DFC9297E8F}
+	EndGlobalSection
+EndGlobal
