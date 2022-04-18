@@ -13,7 +13,7 @@ namespace GeradorDeRotasMVC.Services
 {
     public static class PersonServices
     {
-        private static readonly string baseUri = "https://localhost:44308/api/";
+        private static readonly string baseUri = "https://localhost:44337/api/";
         public static async Task<List<Person>> GetAll()
         {
             List<Person> people = null;
@@ -47,8 +47,39 @@ namespace GeradorDeRotasMVC.Services
                 httpClient.DefaultRequestHeaders.Accept.Add(
                     new MediaTypeWithQualityHeaderValue("application/json"));
 
-                var result = await httpClient.PostAsJsonAsync("Value", person);
+                var result = await httpClient.PostAsJsonAsync("Values", person);
+            }
+        }
 
+        public static async Task<Person> Details(string id)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                Person people;
+                httpClient.BaseAddress = new Uri(baseUri);
+
+                var response = await httpClient.GetAsync("Values/" + id);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseBody = response.Content.ReadAsStringAsync().Result;
+                    people = JsonConvert.DeserializeObject<Person>(responseBody);
+                }
+                else
+                {
+                    people = null;
+                }
+                return people;
+            }
+        }
+
+        public static async Task Update(Person person)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.BaseAddress = new Uri(baseUri);
+
+                var response = await httpClient.PutAsJsonAsync("Values", person);
             }
         }
     }

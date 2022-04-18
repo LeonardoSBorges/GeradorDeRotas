@@ -7,11 +7,12 @@ namespace GeradorDeRotasMVC.Controllers
 {
     public class PersonController : Controller
     {
-        public async Task<IActionResult> Index()
+       public async Task<IActionResult> Index()
         {
-            var people = await PersonServices.GetAll();
-            return View(people);
+            var result = View(await PersonServices.GetAll());
+            return result;
         }
+
         public async Task<IActionResult> Create(Person person)
         {
 
@@ -19,8 +20,25 @@ namespace GeradorDeRotasMVC.Controllers
                 return View(person);
 
             await PersonServices.Create(person);
+            
+            return View(Index());
+        }
 
-            return View(nameof(Index));
+        public async Task<IActionResult> Details(string id)
+        {
+            var result =  await PersonServices.Details(id);
+
+            return View(result);
+        }
+
+        public async Task<IActionResult> Edit(Person person)
+        {
+             if(person.Name == null)
+                return View(person);
+            
+            await PersonServices.Update(person);
+            var result = person.Id;
+            return View(Index());
         }
     }
 }
