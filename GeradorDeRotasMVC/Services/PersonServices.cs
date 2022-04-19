@@ -19,7 +19,7 @@ namespace GeradorDeRotasMVC.Services
             List<Person> people = null;
 
             using (var httpClient = new HttpClient())
-            {
+             {
                 httpClient.BaseAddress = new Uri(baseUri);
 
                 var response = await httpClient.GetAsync("Values");
@@ -59,7 +59,7 @@ namespace GeradorDeRotasMVC.Services
                 Person people;
                 httpClient.BaseAddress = new Uri(baseUri);
 
-                var response = await httpClient.GetAsync("Values/" + id);
+                var response = await httpClient.GetAsync("Values/GetById/" + id);
 
                 if (response.IsSuccessStatusCode)
                 {

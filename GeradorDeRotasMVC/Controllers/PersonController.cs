@@ -9,7 +9,7 @@ using GeradorDeRotasMVC.Services;
 
 namespace GeradorDeRotasMVC.Controllers
 {
-    public class PeopleController : Controller
+    public class PersonController : Controller
     {
         // GET: People
         public async Task<IActionResult> Index()
@@ -136,7 +136,7 @@ namespace GeradorDeRotasMVC.Controllers
         private bool PersonExists(string id)
         {
             var result = PersonServices.Details(id);
-            return result != null ? true : false ;
+            return result != null ? true : false;
         }
     }
 }

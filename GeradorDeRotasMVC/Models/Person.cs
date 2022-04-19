@@ -10,6 +10,7 @@ namespace GeradorDeRotasMVC.Models
         public string Id { get; set; }
         [Required(ErrorMessage ="Campo obrigadotorio")]
         public string Name { get; set; }
+        public bool HaveTeam { get; set; }
 
         public Person()
         {

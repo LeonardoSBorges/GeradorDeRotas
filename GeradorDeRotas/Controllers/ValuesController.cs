@@ -22,6 +22,10 @@ namespace GeradorDeRotasPerson.Controllers
             return await _personService.GetPeople();
         }
 
+        [HttpGet("GetById/{id}", Name = "GetById")]
+        public async Task<Person> GetById(string id) =>
+            await _personService.GetById(id);
+
         [HttpGet("{name}", Name = "GetByName")]
         public async Task<Person> Get(string name) =>
             await _personService.GetPerson(name);

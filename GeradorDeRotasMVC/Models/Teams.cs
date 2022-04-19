@@ -7,14 +7,22 @@ namespace GeradorDeRotasMVC.Models
     public class Teams
     {
         [BsonId]
-        [BsonIgnore]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
         [BsonRequired]
         public string Name { get; set; }
+
         [BsonRequired]
-        public List<Person> Person { get; set; }
+        public virtual List<Person> People { get; set; }
+
+        [BsonRequired]
+        public bool IsAvailable { get; set; }
+
+        [BsonRequired]
+        public string State { get; set; }
+
         [BsonRequired]
         public string City { get; set; }
+
     }
 }

@@ -26,6 +26,12 @@ namespace GeradorDeRotasPerson.Service
             return result;
         }
 
+        public async Task<Person> GetById(string id)
+        {
+            var result = await _connection.Find(getPerson => getPerson.Id == id).FirstOrDefaultAsync();
+            return result;
+        }
+
         public async Task<Person> GetPerson(string name)
         {
             var result = await _connection.Find(getPerson => getPerson.Name == name).FirstOrDefaultAsync();
