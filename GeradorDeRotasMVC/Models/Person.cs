@@ -1,15 +1,14 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-
+using System.ComponentModel.DataAnnotations;
 
 namespace GeradorDeRotasMVC.Models
 {
     public class Person
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
+        
         public string Id { get; set; }
-        [BsonRequired]
+        [Required(ErrorMessage ="Campo obrigadotorio")]
         public string Name { get; set; }
 
         public Person()

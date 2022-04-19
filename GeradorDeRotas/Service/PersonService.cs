@@ -25,8 +25,12 @@ namespace GeradorDeRotasPerson.Service
             
             return result;
         }
-        public async Task<Person> GetPerson(string id) =>
-            await _connection.Find(getPerson => getPerson.Id == id).FirstOrDefaultAsync();
+
+        public async Task<Person> GetPerson(string name)
+        {
+            var result = await _connection.Find(getPerson => getPerson.Name == name).FirstOrDefaultAsync();
+            return result;
+        }
 
         public async Task<(int, string)> PostNewPerson(Person person)
         {
@@ -42,7 +46,6 @@ namespace GeradorDeRotasPerson.Service
         {
 
             var result = _connection.ReplaceOneAsync(searchPerson => searchPerson.Id == person.Id, person).Result;
-            var result2 = await _connection.ReplaceOneAsync(searchPerson => searchPerson.Id == person.Id, person);
             if (result.MatchedCount == 0)
                 return (400, "Nenhum registro foi encontrado com este id!");
 

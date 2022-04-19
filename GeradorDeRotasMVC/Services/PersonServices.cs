@@ -13,7 +13,7 @@ namespace GeradorDeRotasMVC.Services
 {
     public static class PersonServices
     {
-        private static readonly string baseUri = "https://localhost:44337/api/";
+        private static readonly string baseUri = "https://localhost:44308/api/";
         public static async Task<List<Person>> GetAll()
         {
             List<Person> people = null;
@@ -37,6 +37,7 @@ namespace GeradorDeRotasMVC.Services
 
             return people;
         }
+
 
         public static async Task Create(Person person)
         {
@@ -80,6 +81,16 @@ namespace GeradorDeRotasMVC.Services
                 httpClient.BaseAddress = new Uri(baseUri);
 
                 var response = await httpClient.PutAsJsonAsync("Values", person);
+            }
+        }
+
+        public static async Task Delete(string id)
+        {
+            using(var httpClient = new HttpClient())
+            {
+                httpClient.BaseAddress = new Uri(baseUri);
+
+                var response = await httpClient.DeleteAsync("Values/" + id);
             }
         }
     }

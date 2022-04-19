@@ -1,6 +1,5 @@
 ﻿using GeradorDeRotasPerson.Service;
 using Microsoft.AspNetCore.Mvc;
-using ModelShare.DTO;
 using ModelShare.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -23,9 +22,9 @@ namespace GeradorDeRotasPerson.Controllers
             return await _personService.GetPeople();
         }
 
-        [HttpGet("{id}", Name = "GetPerson")]
-        public async Task<Person> Get(string id) =>
-            await _personService.GetPerson(id);
+        [HttpGet("{name}", Name = "GetByName")]
+        public async Task<Person> Get(string name) =>
+            await _personService.GetPerson(name);
 
         [HttpPost]
         public async Task<IActionResult> Post(Person newPerson)
@@ -45,7 +44,7 @@ namespace GeradorDeRotasPerson.Controllers
             return Ok(result.Item2);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}", Name = "GetPerson")]
         public async Task<IActionResult> Delete(string id)
         {
             await _personService.Delete(id);

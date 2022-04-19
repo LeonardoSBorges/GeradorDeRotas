@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,14 +12,27 @@ namespace ModelShare.Entities
     public class Teams
     {
         [BsonId]
-        [BsonIgnore]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
         [BsonRequired]
+        [JsonProperty("Name")]
         public string Name { get; set; }
+
         [BsonRequired]
-        public List<Person> Person { get; set; }
+        [JsonProperty("People")]
+        public virtual List<Person> People { get; set; }
+
         [BsonRequired]
+        [JsonProperty("IsAvailable")]
+        public bool IsAvailable { get; set; }
+
+        [BsonRequired]
+        [JsonProperty("State")]
+        public string State { get; set; }
+
+        [BsonRequired]
+        [JsonProperty("City")]
         public string City { get; set; }
+
     }
 }
