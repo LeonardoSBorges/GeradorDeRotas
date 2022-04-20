@@ -23,7 +23,7 @@ namespace TeamsGeradorDeRotas.Controllers
             return await _teamsServices.GetAll();
         }
 
-        [HttpGet("{id}", Name = "GetTeams")]
+        [HttpGet("GetById/{id}")]
         public async Task<IActionResult> Get(string id)
         {
             var result = await _teamsServices.GetById(id);
@@ -34,7 +34,7 @@ namespace TeamsGeradorDeRotas.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
+        [HttpPost("Post")]
         public async Task<IActionResult> Post(Teams newTeams)
         {
             var result = await _teamsServices.Create(newTeams);
