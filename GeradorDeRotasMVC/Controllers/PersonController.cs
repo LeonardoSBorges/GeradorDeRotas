@@ -12,7 +12,7 @@ namespace GeradorDeRotasMVC.Controllers
     public class PersonController : Controller
     {
         // GET: People
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index() 
         {
             return View(await PersonServices.GetAll());
         }
@@ -119,7 +119,7 @@ namespace GeradorDeRotasMVC.Controllers
             {
                 return NotFound();
             }
-
+           
             return View(person);
         }
 

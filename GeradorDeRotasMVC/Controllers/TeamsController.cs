@@ -13,6 +13,7 @@ namespace GeradorDeRotasMVC.Controllers
         // GET: People
         public async Task<IActionResult> Index()
         {
+
             return View(await TeamsServices.GetAll());
         }
 
@@ -37,7 +38,13 @@ namespace GeradorDeRotasMVC.Controllers
         public async Task<IActionResult> Create()
         {
             List<Person> result = await PersonServices.GetAll();
-            ViewBag.People = result;
+            List<Person> hasantTeam = new List<Person>();
+            foreach (var person in result)
+            {
+                if (person.HaveTeam == false)
+                    hasantTeam.Add(person);
+            }
+            ViewBag.People = hasantTeam;
             return View();
         }
 
@@ -46,24 +53,22 @@ namespace GeradorDeRotasMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Teams teams)
+        public async Task<IActionResult> Create([Bind("Name,City,State, Person")] Teams teams)
         {
             List<Person> selectPeople = new List<Person>();
-            if (ModelState.IsValid)
-            {
-                if(Request.Form["checkPeopleTeam"].ToList().Count == 0)
-                    return View(nameof(Create), teams);
-                
-                foreach(var item in Request.Form["checkPeopleTeam"].ToList())
-                {
-                    selectPeople.Add(new Person(item));
-                }
 
-                teams.People = selectPeople;
-                await TeamsServices.Create(teams);
-                return RedirectToAction(nameof(Index));
+            if (Request.Form["checkPeopleTeam"].ToList().Count == 0)
+                return View(nameof(Create), teams);
+
+            foreach (var item in Request.Form["checkPeopleTeam"].ToList())
+            {
+                selectPeople.Add(new Person(item, null));
             }
-            return View(teams);
+            teams.People = selectPeople;
+         
+                await TeamsServices.Create(teams);
+       
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: People/Edit/5
@@ -73,8 +78,23 @@ namespace GeradorDeRotasMVC.Controllers
             {
                 return NotFound();
             }
-
+            List<Person> result = await PersonServices.GetAll();
+            List<Person> hasantTeam = new List<Person>();
+            var hasTeam = new List<Person>();
+            foreach (var person in result)
+            {
+                if (person.HaveTeam == false)
+                    hasantTeam.Add(person);
+            }
+            ViewBag.PeopleAvaliable = hasantTeam;
             var teams = await TeamsServices.Details(id);
+
+            foreach (var peopleTeam in teams.People)
+            {
+                hasTeam.Add(peopleTeam);
+            }
+
+            ViewBag.PeopleTeam = hasTeam;
             if (teams == null)
             {
                 return NotFound();
@@ -140,7 +160,7 @@ namespace GeradorDeRotasMVC.Controllers
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var person = await TeamsServices.Details(id);
-            await PersonServices.Delete(id);
+            await TeamsServices.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 

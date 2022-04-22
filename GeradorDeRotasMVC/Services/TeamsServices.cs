@@ -15,7 +15,7 @@ namespace GeradorDeRotasMVC.Services
 
         public static async Task<List<Teams>> GetAll()
         {
-            List<Teams> people = null;
+            List<Teams> people = new List<Teams>();
 
             using (var httpClient = new HttpClient())
             {
@@ -40,7 +40,6 @@ namespace GeradorDeRotasMVC.Services
 
         public static async Task Create(Teams teams)
         {
-
             using (var httpClient = new HttpClient())
             {
                 if (httpClient.BaseAddress == null) 
@@ -49,7 +48,7 @@ namespace GeradorDeRotasMVC.Services
                 httpClient.DefaultRequestHeaders.Accept.Add(
                     new MediaTypeWithQualityHeaderValue("application/json"));
 
-                var result = await httpClient.PostAsJsonAsync("Teams", teams);
+                var result = await httpClient.PostAsJsonAsync("Teams/Post", teams);
             }
         }
 

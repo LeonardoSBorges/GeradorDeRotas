@@ -26,10 +26,6 @@ namespace AddressGeradorDeRotas.Service
 
         public async Task<(int, string)> PostNewPerson(Address address)
         {
-            
-            if (address.Cep.Length < 4)
-                return (400, "Insira um nome com mais de 4 caracteres");
-
             await _connection.InsertOneAsync(address);
 
             return (201, "Um novo registro foi adicionado!");

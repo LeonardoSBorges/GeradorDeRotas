@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ModelShare.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -14,13 +13,17 @@ namespace TeamsGeradorDeRotas.Controllers
         private readonly TeamsServices _teamsServices;
         public TeamsController(TeamsServices teamsServices)
         {
+
             _teamsServices = teamsServices;
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Teams>> GetAll()
+        public async Task<ICollection<Teams>> GetAll()
         {
-            return await _teamsServices.GetAll();
+
+            await _teamsServices.UpdateTeamsData();
+            var result = await _teamsServices.GetAll();
+            return result;
         }
 
         [HttpGet("GetById/{id}")]
@@ -41,7 +44,8 @@ namespace TeamsGeradorDeRotas.Controllers
 
             if (result == 200)
                 return Ok(newTeams);
-
+            else if (result == 204)
+                return NoContent();
             return NotFound("Nao foi possivel registrar um novo time, por favor verifique se todos os dados foram inseridos!");
         }
 
@@ -57,7 +61,7 @@ namespace TeamsGeradorDeRotas.Controllers
         }
 
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             var result = await _teamsServices.Delete(id);
