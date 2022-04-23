@@ -38,12 +38,14 @@ namespace GeradorDeRotasMVC.Controllers
         public async Task<IActionResult> Create()
         {
             List<Person> result = await PersonServices.GetAll();
+            List<Address> address = await AddressServices.GetAll();
             List<Person> hasantTeam = new List<Person>();
             foreach (var person in result)
             {
                 if (person.HaveTeam == false)
                     hasantTeam.Add(person);
             }
+            ViewBag.Address = address;
             ViewBag.People = hasantTeam;
             return View();
         }
@@ -64,10 +66,15 @@ namespace GeradorDeRotasMVC.Controllers
             {
                 selectPeople.Add(new Person(item, null));
             }
+
+            var addressId = Request.Form["addressRegisterTeams"].ToString();
+            var address = await AddressServices.Details(addressId);
+
+            teams.Address = address;
             teams.People = selectPeople;
-         
-                await TeamsServices.Create(teams);
-       
+
+            await TeamsServices.Create(teams);
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -80,6 +87,7 @@ namespace GeradorDeRotasMVC.Controllers
             }
             List<Person> result = await PersonServices.GetAll();
             List<Person> hasantTeam = new List<Person>();
+            List<Address> address = await AddressServices.GetAll();
             var hasTeam = new List<Person>();
             foreach (var person in result)
             {
@@ -87,6 +95,7 @@ namespace GeradorDeRotasMVC.Controllers
                     hasantTeam.Add(person);
             }
             ViewBag.PeopleAvaliable = hasantTeam;
+            ViewBag.Address = address;
             var teams = await TeamsServices.Details(id);
 
             foreach (var peopleTeam in teams.People)
@@ -114,9 +123,46 @@ namespace GeradorDeRotasMVC.Controllers
             {
                 return NotFound();
             }
+            teams.People = new List<Person>();
+            var team = await TeamsServices.Details(teams.Id);
+            var people = team.People;
+            
+            var participatingOfTeam = Request.Form["checkPeopleAvailableToAdd"].ToList();
+            var peopleHasntTeam = Request.Form["checkPeopleTeamToRemove"].ToList();
+            var addressId = Request.Form["addressRegisterTeams"].ToString();
+            var address = await AddressServices.Details(addressId);
 
-            if (ModelState.IsValid)
+            if (participatingOfTeam.Count > 0 || peopleHasntTeam.Count > 0)
             {
+                var test = new List<Person>();
+                foreach (var participant in participatingOfTeam)
+                {
+                    var person = await PersonServices.Details(participant);
+                    teams.People.Add(person);
+                }
+                foreach(var removePerson in peopleHasntTeam)
+                {
+                    var person = await PersonServices.Details(removePerson);
+                    test.Add(person);
+                }
+                foreach (var item in people)
+                {
+                    int count = 0;
+                    foreach (var personTeam in test)
+                        if (item.Id == personTeam.Id)
+                        {
+                            count++;
+                            personTeam.HaveTeam = false;
+                            await PersonServices.Update(personTeam);
+                        }
+
+                    if (count == 0)
+                        teams.People.Add(item);
+                }
+            }
+
+            teams.Address = address;
+
                 try
                 {
                     await TeamsServices.Update(teams);
@@ -133,7 +179,7 @@ namespace GeradorDeRotasMVC.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
+            
             return View(teams);
         }
 

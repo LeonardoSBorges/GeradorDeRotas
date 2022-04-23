@@ -33,7 +33,6 @@ namespace AddressGeradorDeRotas.Service
 
         public async Task<(int, string)> Update(Address address)
         {
-            
             var result = _connection.ReplaceOneAsync(getAddress => getAddress.Id == address.Id, address).Result;
             if (result.MatchedCount == 0)
                 return (400, "Nenhum registro foi encontrado com este id!");

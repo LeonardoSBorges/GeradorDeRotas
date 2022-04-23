@@ -2,6 +2,7 @@
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,10 +17,19 @@ namespace ModelShare.Entities
         public string State { get; set; }
         public string City { get; set; }
 
-        public override string ToString()
+        [NotMapped]
+        public string CityState => $"{City} - {State}";
+
+        public Address()
         {
-            return $@"{City.ToUpper()} - {State.ToUpper()} ";
-                
+
+        }
+
+        public Address(string id, string state, string city)
+        {
+            Id = id;
+            State = state;
+            City = city;
         }
     }
 }

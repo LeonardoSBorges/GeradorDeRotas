@@ -27,12 +27,8 @@ namespace ModelShare.Entities
         public bool IsAvailable { get; set; }
 
         [BsonRequired]
-        [JsonProperty("State")]
-        public string State { get; set; }
-
-        [BsonRequired]
-        [JsonProperty("City")]
-        public string City { get; set; }
+        [JsonProperty("Address")]
+        public Address Address { get; set; }
 
     }
 }

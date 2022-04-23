@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -9,77 +10,76 @@ using System.Threading.Tasks;
 
 namespace GeradorDeRotasMVC.Services
 {
-    public class TeamsServices
+    public static class AddressServices
     {
-        private static  readonly string baseUri = "https://localhost:44376/api/";
-
-        public static async Task<List<Teams>> GetAll()
+        private static readonly string baseUri = "https://localhost:44377/api/";
+        public static async Task<List<Address>> GetAll()
         {
-            List<Teams> teams = new List<Teams>();
+            List<Address> people = null;
 
             using (var httpClient = new HttpClient())
             {
                 httpClient.BaseAddress = new Uri(baseUri);
 
-                var response = await httpClient.GetAsync("Teams");
+                var response = await httpClient.GetAsync("Address");
 
                 if (response.IsSuccessStatusCode)
                 {
                     var responseBody = response.Content.ReadAsStringAsync().Result;
-                    teams = JsonConvert.DeserializeObject<List<Teams>>(responseBody);
+                    people = JsonConvert.DeserializeObject<List<Address>>(responseBody);
                 }
                 else
                 {
-                    teams = new List<Teams>();
+                    people = new List<Address>();
                 }
             }
-            return teams;
+
+            return people;
         }
 
 
-        public static async Task Create(Teams teams)
+        public static async Task Create(Address person)
         {
             using (var httpClient = new HttpClient())
             {
-                if (httpClient.BaseAddress == null) 
-                    httpClient.BaseAddress = new Uri(baseUri);
+                if (httpClient.BaseAddress == null) httpClient.BaseAddress = new Uri(baseUri);
                 httpClient.DefaultRequestHeaders.Accept.Clear();
                 httpClient.DefaultRequestHeaders.Accept.Add(
                     new MediaTypeWithQualityHeaderValue("application/json"));
 
-                var result = await httpClient.PostAsJsonAsync("Teams/Post", teams);
+                var result = await httpClient.PostAsJsonAsync("Address", person);
             }
         }
 
-        public static async Task<Teams> Details(string id)
+        public static async Task<Address> Details(string id)
         {
             using (var httpClient = new HttpClient())
             {
-                Teams teams;
+                Address address;
                 httpClient.BaseAddress = new Uri(baseUri);
 
-                var response = await httpClient.GetAsync("Teams/GetById/" + id);
+                var response = await httpClient.GetAsync("Address/" + id);
 
                 if (response.IsSuccessStatusCode)
                 {
                     var responseBody = response.Content.ReadAsStringAsync().Result;
-                    teams = JsonConvert.DeserializeObject<Teams>(responseBody);
+                    address = JsonConvert.DeserializeObject<Address>(responseBody);
                 }
                 else
                 {
-                    teams = null;
+                    address = null;
                 }
-                return teams;
+                return address;
             }
         }
 
-        public static async Task Update(Teams teams)
+        public static async Task Update(Address address)
         {
             using (var httpClient = new HttpClient())
             {
                 httpClient.BaseAddress = new Uri(baseUri);
 
-                var response = await httpClient.PutAsJsonAsync("Teams", teams);
+                var response = await httpClient.PutAsJsonAsync("Address", address);
             }
         }
 
@@ -89,7 +89,7 @@ namespace GeradorDeRotasMVC.Services
             {
                 httpClient.BaseAddress = new Uri(baseUri);
 
-                var response = await httpClient.DeleteAsync("Teams/" + id);
+                var response = await httpClient.DeleteAsync("Address/" + id);
             }
         }
     }

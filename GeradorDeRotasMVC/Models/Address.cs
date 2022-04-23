@@ -1,30 +1,24 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GeradorDeRotasMVC.Models
 {
     public class Address
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
-        public string Cep { get; set; }
-        public string Street { get; set; }
-        public string District{ get; set; }
-        public int Number { get; set; }
+
+        [Display(Name = "Estado")]
+        [Required(ErrorMessage = "Campo Obrigatorio")]
+
+        public string State { get; set; }
+
+        [Display(Name = "Cidade")]
+        [Required(ErrorMessage ="Campo Obrigatorio")]
         public string City { get; set; }
-        public string Complement { get; set; }
 
-
-        public override string ToString()
-        {
-            return $@"CEP: {Cep}
-LOGRADOURO: {Street}
-DISTRITO: {District}
-NUMERO: {Number}
-CIDADE: {City}
-COMPLEMENTO: {Complement}";
-                
-        }
+        [NotMapped]
+        public string CityState => $"{City} - {State}";
     }
 }

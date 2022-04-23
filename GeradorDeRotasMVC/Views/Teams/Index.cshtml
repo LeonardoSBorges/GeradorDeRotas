@@ -19,10 +19,7 @@
                 @Html.DisplayNameFor(model => model.People)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.State)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.City)
+                @Html.DisplayNameFor(model => model.Address.City)
             </th>
             <th></th>
         </tr>
@@ -41,11 +38,9 @@
 					}
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.State)
+                @Html.DisplayFor(modelItem => item.Address.CityState)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.City)
-            </td>
+          
             <td>
                 <a asp-action="Edit" class="btn btn-success" asp-route-id="@item.Id">Editar</a> 
                 <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id">Detalhes</a> 

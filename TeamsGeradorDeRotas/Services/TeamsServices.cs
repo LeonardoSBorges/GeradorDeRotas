@@ -67,11 +67,13 @@ namespace TeamsGeradorDeRotas.Services
         public async Task<int> Delete(string id)
         {
             var team = await _teams.Find(searchTeam => searchTeam.Id == id).FirstOrDefaultAsync();
-
-            foreach(var item in team.People)
+            if (team.People != null)
             {
-                item.HaveTeam = false;
-                await ConsumeWebAPI.UpdateValue(item);
+                foreach (var item in team.People)
+                {
+                    item.HaveTeam = false;
+                    await ConsumeWebAPI.UpdateValue(item);
+                }
             }
 
             var countDeleteTeams = _teams.DeleteOne(searchTemasForDelete => searchTemasForDelete.Id == id).DeletedCount;
@@ -81,7 +83,6 @@ namespace TeamsGeradorDeRotas.Services
 
             return new OkResult().StatusCode;
         }
-
         public async Task<bool> UpdateTeamsData()
         {
             var flafFinished = false;
@@ -97,12 +98,18 @@ namespace TeamsGeradorDeRotas.Services
                     {
                         team.People.Remove(person);
                     }
-                    
-                    
+
                 }
+                var address = await ConsumeWebAPI.GetAddress(team.Address.Id);
+
+                if(address.CityState != team.Address.CityState)
+                {
+                    team.Address = address;
+                }
+
+
                 updateTeam.Add(team);
             }
-
             foreach (var team in updateTeam)
             {
                 await Replace(team);
