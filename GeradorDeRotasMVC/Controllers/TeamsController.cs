@@ -134,7 +134,7 @@ namespace GeradorDeRotasMVC.Controllers
 
             if (participatingOfTeam.Count > 0 || peopleHasntTeam.Count > 0)
             {
-                var test = new List<Person>();
+                var test = new List<Person>();  
                 foreach (var participant in participatingOfTeam)
                 {
                     var person = await PersonServices.Details(participant);

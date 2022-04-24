@@ -48,7 +48,7 @@ namespace GeradorDeRotasPerson.Controllers
             return Ok(result.Item2);
         }
 
-        [HttpDelete("{id}", Name = "GetPerson")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             await _personService.Delete(id);

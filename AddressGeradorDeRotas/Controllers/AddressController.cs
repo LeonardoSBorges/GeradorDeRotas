@@ -46,7 +46,7 @@ namespace AddressGeradorDeRotas.Controllers
             return Ok(result.Item2);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             await _addressService.Delete(id);

@@ -1,0 +1,61 @@
+﻿@model MVC.Models.Teams
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Teams</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+				 <label asp-for="Address" class="control-label"></label><br />
+				 <select asp-for="Address" asp-items="@(new SelectList(ViewBag.Address,"Id", "CityState"))" class="form-control" name="addressRegisterTeams"></select>
+			</div>
+            <div class="form-group">
+			    <label asp-for="People" class="control-label" >Pessoas disponiveis: </label><br />
+                @if (ViewBag.PeopleAvaliable != null)
+                {
+                    @foreach (var person in ViewBag.PeopleAvaliable)
+                    {
+                        <input name="checkPeopleAvailableToAdd" type="checkbox" value=@person.Id>
+
+                        <label for="@person.Name"> @person.Name</label>
+
+                        <br />
+                    }
+                }
+                <label asp-for="People" class="control-label">Integrantes: (Selecione para remover) </label><br />
+                    @foreach (var person in ViewBag.PeopleTeam)
+                    {
+                        <input name="checkPeopleTeamToRemove" type="checkbox" value=@person.Id>
+
+                        <label for="@person.Name"> @person.Name</label>
+
+                        <br />
+                    }
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-outline-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" class="btn btn-outline-danger">Sair</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

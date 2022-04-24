@@ -22,8 +22,8 @@
 				 <label asp-for="Address" class="control-label"></label><br />
 				 <select asp-for="Address" asp-items="@(new SelectList(ViewBag.Address,"Id", "CityState"))" class="form-control" name="addressRegisterTeams"></select>
 			</div>
-             <div class="form-group">
-				<label asp-for="People" class="control-label" >Pessoas disponiveis: </label><br />
+            <div class="form-group">
+			    <label asp-for="People" class="control-label" >Pessoas disponiveis: </label><br />
                 @if (ViewBag.PeopleAvaliable != null)
                 {
                     @foreach (var person in ViewBag.PeopleAvaliable)
@@ -46,14 +46,14 @@
                     }
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-outline-success" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-outline-danger">Sair</a>
 </div>
 
 @section Scripts {

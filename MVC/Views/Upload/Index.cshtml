@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    int i = 0;
+}
+
+<h1>Create</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+			    <label class="control-label" >Pessoas disponiveis: </label><br />
+                
+                    @foreach (var team in ViewBag.Teams)
+                    {
+                        <input name="checkTeamForService" type="checkbox" value=@team.Id>
+
+                        <label for="@team.Name"> @team.Name</label>
+
+                        <br />
+                    }
+                
+                <label class="control-label">Integrantes:</label><br />
+                    @foreach (var column in ViewBag.FirstLine)
+                    {
+                        <input name="checkColumn" type="checkbox" value=@i id="dataOptions">
+
+                        <label for="@column.ToString()"> @column.ToString()</label>
+
+                        <br />
+                        i++;
+                    }
+            </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

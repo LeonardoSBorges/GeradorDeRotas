@@ -59,10 +59,14 @@ namespace TeamsGeradorDeRotas.Services
             if (countModfyTeams.Equals(0))
                 return new NotFoundResult().StatusCode;
            
-
             return new OkResult().StatusCode;
-
         }
+
+        public async Task<List<Teams>> GetTeamsByCity(string id)
+        {
+            var teams = await _teams.Find(searchTeamsByCity => searchTeamsByCity.Address.Id == id).ToListAsync();
+            return teams;
+        } 
 
         public async Task<int> Delete(string id)
         {
@@ -85,7 +89,7 @@ namespace TeamsGeradorDeRotas.Services
         }
         public async Task<bool> UpdateTeamsData()
         {
-            var flafFinished = false;
+            var flagFinished = false;
             ICollection<Teams> teams= await _teams.Find(getTeams => true).ToListAsync();
             ICollection<Teams> updateTeam = new List<Teams>();
             foreach (var team in teams)
@@ -115,7 +119,7 @@ namespace TeamsGeradorDeRotas.Services
                 await Replace(team);
             }
 
-            return flafFinished;
+            return flagFinished;
         }
     }
 }

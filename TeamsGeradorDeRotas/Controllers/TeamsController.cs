@@ -37,6 +37,12 @@ namespace TeamsGeradorDeRotas.Controllers
             return Ok(result);
         }
 
+        [HttpGet("GetByCity/{id}")]
+        public async Task<List<Teams>> GetTeamsByCity(string id)
+        {
+            return await _teamsServices.GetTeamsByCity(id);
+        }
+
         [HttpPost("Post")]
         public async Task<IActionResult> Post(Teams newTeams)
         {
