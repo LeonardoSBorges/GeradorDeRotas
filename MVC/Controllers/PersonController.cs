@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVC.Models;
 using MVC.Services;
@@ -6,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace MVC.Controllers
 {
+    [Authorize]
+
     public class PersonController : Controller
     {
         // GET: People

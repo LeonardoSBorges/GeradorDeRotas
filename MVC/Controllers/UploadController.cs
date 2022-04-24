@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MVC.Models;
 using MVC.Services;
 using OfficeOpenXml;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace MVC.Controllers
 {
+    [Authorize]
     public class UploadController : Controller
     {
         private static ICollection<string> services = new List<string>(); 
