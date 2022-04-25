@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Index";
     int i = 0;
 }
@@ -8,33 +7,41 @@
 
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <div class="form-group">
-			    <label class="control-label" >Pessoas disponiveis: </label><br />
-                
-                    @foreach (var team in ViewBag.Teams)
-                    {
-                        <input name="checkTeamForService" type="checkbox" value=@team.Id>
+    <form asp-action="Create">
+        <div class="col">
+            <div class="form-group">
+                <label class="control-label">Times disponiveis para os servicos: </label><br />
 
-                        <label for="@team.Name"> @team.Name</label>
+                @foreach (var team in ViewBag.Teams)
+                {
+                    <input name="checkTeamForService" type="checkbox" value=@team.Id>
 
-                        <br />
-                    }
-                
-                <label class="control-label">Integrantes:</label><br />
-                    @foreach (var column in ViewBag.FirstLine)
-                    {
-                        <input name="checkColumn" type="checkbox" value=@i id="dataOptions">
+                    <label for="@team.Name"> @team.Name</label>
 
-                        <label for="@column.ToString()"> @column.ToString()</label>
+                    <br />
+                }
 
-                        <br />
-                        i++;
-                    }
+                <label class="control-label">Servicos:</label><br />
+                @foreach (var column in ViewBag.FirstLine)
+                {
+                    <input name="checkColumn" type="checkbox" value=@i id="dataOptions">
+
+                    <label for="@column.ToString()"> @column.ToString()</label>
+
+                    <br />
+                    i++;
+                }
             </div>
-    </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Criar documento" class="btn btn-primary" onclick="GenerateDocument()" />
+            </div>
+        </div>
+    </form>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
 }
