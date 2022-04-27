@@ -141,15 +141,15 @@ namespace MVC.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var teams = new List<Teams>();
+            var teams = new List<string>();
 
             foreach (var team in teamsForServices)
             {
                 var result = await TeamsServices.Details(team);
-                teams.Add(result);
+                teams.Add(result.Name);
             }
             var addressSelected = await AddressServices.Details(cityId);
-            await MakeFileDoc.Wirte(allDocumment, teamsForServices, optionsOfDocumment, serviceName, addressSelected);
+            await MakeFileDoc.Wirte(allDocumment, teams, optionsOfDocumment, serviceName, addressSelected);
                 return View();
         }
 

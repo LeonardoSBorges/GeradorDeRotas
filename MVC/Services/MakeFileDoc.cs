@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,11 +10,12 @@ namespace MVC.Services
 {
     public class MakeFileDoc
     {
-        public static async Task Wirte(IDictionary<string, List<string>> data, List<string> teamForService, List<string> columnsForServices, List<string> nameService, Address cityService)
+        public static async Task Wirte(IDictionary<string, List<string>> data, List<string> teamForService, List<string> columnsForServices, string nameService, Address cityService)
         {
             var header = data["OS"];
             var keys = data["KEYS"];
             List<List<string>> allData = new List<List<string>>();
+            var indexService = 0;
             foreach (var key in keys)
             {
                 List<string> justDataForUse = new List<string>();
@@ -23,51 +25,106 @@ namespace MVC.Services
                 foreach (var column in columnsForServices)
                 {
                     justDataForUse.Add(line[int.Parse(column)]);
-                    city = justDataForUse.IndexOf(cityService.City);
+                    city = justDataForUse.IndexOf(cityService.City.ToUpper());
                     cityInHeader = justDataForUse.IndexOf("CIDADE");
-
+                    if (indexService <= 0)
+                        indexService = justDataForUse.IndexOf(nameService);
                 }
 
-                if(city > 0 || cityInHeader > 0)
+                var typeService = indexService > 0 ? justDataForUse[indexService] : "";
+                if (city > 0 && typeService.ToUpper().Equals(nameService, StringComparison.InvariantCultureIgnoreCase) || cityInHeader > 0)
                     allData.Add(justDataForUse);
             }
 
-            var sb = new StringBuilder();
-            var listForHeaderFiltered = allData[0];
-;
-            if (listForHeaderFiltered.Count > 0)
+            //string a = "a", b = "a";
+            //var t = a.Equals(b, StringComparison.InvariantCultureIgnoreCase);
+            allData.RemoveAt(0);
+            var divisionServicesForTeams = allData.Count / teamForService.Count;
+            decimal restDivisionOfServicesForTeams = allData.Count % teamForService.Count;
+            List<string> lastData = new List<string>();
+            if (!(allData.Count % teamForService.Count == 0))
             {
-                for (int countColumnsHeader = 1; countColumnsHeader < allData.Count; countColumnsHeader++)
-                {
+                lastData = allData.ToList().LastOrDefault();
+                allData.Remove(lastData);
+            }
 
-                    sb.Append($@"               ROTA TRABALHO - {DateTime.Now.ToString("dd/MM/yyyy")}           
+
+            var stringBuilder = new StringBuilder();
+            if (allData.Count > 0)
+            {
+                stringBuilder.Append($@"               ROTA TRABALHO - {DateTime.Now.ToString("dd/MM/yyyy")}           
 
 ");
-                    var dataForBulderString = allData[countColumnsHeader];
-                    for (int index = 0; index < columnsForServices.Count; index++)
-                    {
-                        var valueListForHeaderFilteredFormatted = await UpdateStringWithSpecialCharacters(listForHeaderFiltered[index]);
-                        var valueDataForBuilderStringFormatted = await UpdateStringWithSpecialCharacters(dataForBulderString[index]);
-                        sb.AppendLine($@"{valueListForHeaderFilteredFormatted}: {valueDataForBuilderStringFormatted}");
-                    }
+                
+                int indexAux = 0, count = 0;
+                stringBuilder.AppendLine($@"Time:{teamForService[indexAux]}
 
-
-                    sb.AppendLine($@"\/------------------------------------------------------\/");
-
-                }
-
-                string date = DateTime.Now.ToString("dd/MM/yyyy");
-                string hour = DateTime.Now.ToString("hh-mm-ss");
-                string dateTime = date.Replace("/", "") + hour.Replace("-", "");
-
-                string fileName = $@"D:\Teste\File{dateTime}.docx";
-
-                using (StreamWriter sw = new StreamWriter(fileName))
+");
+                for (int index = 0; index < allData.Count; index++)
                 {
-                    sw.Write(sb.ToString());
+                    
+                    if (count == divisionServicesForTeams && restDivisionOfServicesForTeams == 0 || count > divisionServicesForTeams && restDivisionOfServicesForTeams > 0)
+                    {
+                        indexAux++;
+                        stringBuilder.AppendLine(@$"/\ ========================================= /\
+");
+                        stringBuilder.Append($@"Time: {teamForService[indexAux]}
+                                        
+");
+                        count = 0;
+                    }
+                    
+                    var lineData = allData[index];
+                    for (int i = 0; i < columnsForServices.Count; i++)
+                    {
+                        var valueDataHeaderFilteredFormatted = await UpdateStringWithSpecialCharacters(header[i]);
+                        var valueDataForBuilderStringFormatted = await UpdateStringWithSpecialCharacters(lineData[i]);
+                        stringBuilder.AppendLine($@"{valueDataHeaderFilteredFormatted}: {valueDataForBuilderStringFormatted}");
+                    }
+                    stringBuilder.AppendLine($@"----------
+");
+                    count++;
+                }
+                if(lastData.Count > 0 && !(teamForService.Count % 2 == 0))
+                {
+                    stringBuilder.AppendLine(@$"/\ ========================================= /\
+");
+                    stringBuilder.Append($@"Time: {teamForService.LastOrDefault()}
+                                        
+");
+                    for (int i = 0; i < columnsForServices.Count ; i++)
+                    {
+                       
+                        var valueDataHeaderFilteredFormatted = await UpdateStringWithSpecialCharacters(header[i]);
+                        var valueDataForBuilderStringFormatted = await UpdateStringWithSpecialCharacters(lastData[i]);
+                        stringBuilder.AppendLine($@"{valueDataHeaderFilteredFormatted}: {valueDataForBuilderStringFormatted}");
+                    }
+                }
+                if (lastData.Count > 0)
+                {
+                    for (int i = 0; i < columnsForServices.Count; i++)
+                    {
+
+                        var valueDataHeaderFilteredFormatted = await UpdateStringWithSpecialCharacters(header[i]);
+                        var valueDataForBuilderStringFormatted = await UpdateStringWithSpecialCharacters(lastData[i]);
+                        stringBuilder.AppendLine($@"{valueDataHeaderFilteredFormatted}: {valueDataForBuilderStringFormatted}");
+                    }
                 }
             }
+
+            string date = DateTime.Now.ToString("dd/MM/yyyy");
+            string hour = DateTime.Now.ToString("hh-mm-ss");
+            string dateTime = date.Replace("/", "") + hour.Replace("-", "");
+
+            string fileName = $@"D:\Teste\File{dateTime}.docx";
+
+            using (StreamWriter sw = new StreamWriter(fileName))
+            {
+   
+                sw.Write(stringBuilder.ToString());
+            }
         }
+
 
 
         public static async Task<string> UpdateStringWithSpecialCharacters(string str)
