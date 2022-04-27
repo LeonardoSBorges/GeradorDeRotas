@@ -77,11 +77,11 @@ namespace MVC.Services
                     var lineData = allData[index];
                     for (int i = 0; i < columnsForServices.Count; i++)
                     {
-                        var valueDataHeaderFilteredFormatted = await UpdateStringWithSpecialCharacters(header[i]);
-                        var valueDataForBuilderStringFormatted = await UpdateStringWithSpecialCharacters(lineData[i]);
-                        stringBuilder.AppendLine($@"{valueDataHeaderFilteredFormatted}: {valueDataForBuilderStringFormatted}");
+                        var stringForCreateStringBuilder =  BuildingNewString(header, lineData, i).ToString();
+                        stringBuilder.Append(stringForCreateStringBuilder);
                     }
-                    stringBuilder.AppendLine($@"----------
+                    stringBuilder.AppendLine($@"
+----------
 ");
                     count++;
                 }
@@ -94,20 +94,17 @@ namespace MVC.Services
 ");
                     for (int i = 0; i < columnsForServices.Count ; i++)
                     {
-                       
-                        var valueDataHeaderFilteredFormatted = await UpdateStringWithSpecialCharacters(header[i]);
-                        var valueDataForBuilderStringFormatted = await UpdateStringWithSpecialCharacters(lastData[i]);
-                        stringBuilder.AppendLine($@"{valueDataHeaderFilteredFormatted}: {valueDataForBuilderStringFormatted}");
+                        var stringForCreateStringBuilder = BuildingNewString(header, lastData, i).ToString();
+                        stringBuilder.Append(stringForCreateStringBuilder);
                     }
                 }
-                if (lastData.Count > 0)
+                else if (lastData.Count > 0)
                 {
                     for (int i = 0; i < columnsForServices.Count; i++)
                     {
 
-                        var valueDataHeaderFilteredFormatted = await UpdateStringWithSpecialCharacters(header[i]);
-                        var valueDataForBuilderStringFormatted = await UpdateStringWithSpecialCharacters(lastData[i]);
-                        stringBuilder.AppendLine($@"{valueDataHeaderFilteredFormatted}: {valueDataForBuilderStringFormatted}");
+                        var stringForCreateStringBuilder =  BuildingNewString(header, lastData, i).ToString();
+                        stringBuilder.Append(stringForCreateStringBuilder);
                     }
                 }
             }
@@ -125,9 +122,15 @@ namespace MVC.Services
             }
         }
 
+        public static string BuildingNewString(List<string> header, List<string> lineData, int i)
+        {
+            var valueDataHeaderFilteredFormatted = UpdateStringWithSpecialCharacters(header[i]);
+            var valueDataForBuilderStringFormatted = UpdateStringWithSpecialCharacters(lineData[i]);
+            return $@"
+{valueDataHeaderFilteredFormatted}: {valueDataForBuilderStringFormatted}";
+        }
 
-
-        public static async Task<string> UpdateStringWithSpecialCharacters(string str)
+        public static string UpdateStringWithSpecialCharacters(string str)
         {
             /** Troca os caracteres acentuados por não acentuados **/
             string[] acentos = new string[] { "ç", "Ç", "á", "é", "í", "ó", "ú", "ý", "Á", "É", "Í", "Ó", "Ú", "Ý", "à", "è", "ì", "ò", "ù", "À", "È", "Ì", "Ò", "Ù", "ã", "õ", "ñ", "ä", "ë", "ï", "ö", "ü", "ÿ", "Ä", "Ë", "Ï", "Ö", "Ü", "Ã", "Õ", "Ñ", "â", "ê", "î", "ô", "û", "Â", "Ê", "Î", "Ô", "Û" };
