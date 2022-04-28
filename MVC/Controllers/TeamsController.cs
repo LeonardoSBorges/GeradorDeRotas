@@ -140,6 +140,12 @@ namespace MVC.Controllers
             var addressId = Request.Form["addressRegisterTeams"].ToString();
             var address = await AddressServices.Details(addressId);
 
+            if (team.Address.Id != address.Id ) 
+            {
+                teams.People = team.People;
+                teams.IsAvailable = team.IsAvailable;
+                teams.Address = address;
+            }
             if (participatingOfTeam.Count > 0 || removePeopleOfTeam.Count > 0)
             {
                 List<Person> aux = new();
@@ -154,6 +160,9 @@ namespace MVC.Controllers
                     await TeamsServices.UpdatePersonInTeams(id, person);
                 }
             }
+
+
+            await TeamsServices.Update(teams);
             if (!TeamsExists(teams.Id))
             {
                 return NotFound();
