@@ -35,6 +35,8 @@
 <li>
   Selecione  o projeto "MVC" e rode o comando <b>update-database</b> no console de gerenciamento de pacotes para criar o banco de dados SQL, que será utilizado para realizar autenticação.
 <li>
+  Para iniciar o projeto clique com o botao direito na solution e va ate properties, apos isso selecione o campo Various startup projects, coloque o MVC como Start e todo os outros como start without debugging.
+<li>
   Para criar um usuário que é capaz de criar outros usuários (administrador), utilize o email "admin@hotmail.com" (só pode haver um administrador na plataforma).
 <li>
   Apos efetuar o login e entrar na plataforma. Para que o sistema funcione corretamente cadastre na ordem Pessoas depois Cidades e Times, pois para um time existir ele necessita de pessoas e uma cidade.
