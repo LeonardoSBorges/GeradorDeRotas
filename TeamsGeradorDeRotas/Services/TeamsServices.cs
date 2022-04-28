@@ -17,12 +17,12 @@ namespace TeamsGeradorDeRotas.Services
             var database = service.GetDatabase(settings.DataBaseName);
             _teams = database.GetCollection<Teams>(settings.CollectionName);
         }
-        
+
         public async Task<List<Teams>> GetAll()
         {
             //await UpdateTeamsData();
             var result = await _teams.Find(getTeams => true).ToListAsync();
-          
+
             return result;
         }
         public async Task<Teams> GetById(string id) =>
@@ -58,7 +58,7 @@ namespace TeamsGeradorDeRotas.Services
 
             if (countModfyTeams.Equals(0))
                 return new NotFoundResult().StatusCode;
-           
+
             return new OkResult().StatusCode;
         }
 
@@ -66,7 +66,7 @@ namespace TeamsGeradorDeRotas.Services
         {
             var teams = await _teams.Find(searchTeamsByCity => searchTeamsByCity.Address.Id == id).ToListAsync();
             return teams;
-        } 
+        }
 
         public async Task<int> Delete(string id)
         {
@@ -90,15 +90,15 @@ namespace TeamsGeradorDeRotas.Services
         public async Task<bool> UpdateTeamsData()
         {
             var flagFinished = false;
-            ICollection<Teams> teams= await _teams.Find(getTeams => true).ToListAsync();
+            ICollection<Teams> teams = await _teams.Find(getTeams => true).ToListAsync();
             ICollection<Teams> updateTeam = new List<Teams>();
             foreach (var team in teams)
             {
-                foreach(var person in team.People)
+                foreach (var person in team.People)
                 {
                     Person resultSearchIfExistPerson = await ConsumeWebAPI.GetById(person.Id);
 
-                    if(resultSearchIfExistPerson.Name != person.Name)
+                    if (resultSearchIfExistPerson.Name != person.Name)
                     {
                         team.People.Remove(person);
                     }
@@ -106,7 +106,7 @@ namespace TeamsGeradorDeRotas.Services
                 }
                 var address = await ConsumeWebAPI.GetAddress(team.Address.Id);
 
-                if(address.CityState != team.Address.CityState)
+                if (address.CityState != team.Address.CityState)
                 {
                     team.Address = address;
                 }
@@ -120,6 +120,34 @@ namespace TeamsGeradorDeRotas.Services
             }
 
             return flagFinished;
+        }
+
+        public async Task<int> AddPerson(string id, Person person)
+        {
+            var team = await _teams.Find(searchTeam => searchTeam.Id == id).FirstOrDefaultAsync();
+
+            var filter = Builders<Teams>.Filter.Where(team => team.Id == id);
+            var updatePerson = Builders<Teams>.Update.Push("People", person);
+            await _teams.UpdateOneAsync(filter, updatePerson);
+
+            person.HaveTeam = true;
+            await ConsumeWebAPI.UpdateValue(person);
+
+            return new OkResult().StatusCode;
+        }
+
+        public async Task<int> DeletePerson(string id, Person person)
+        {
+            var team = await _teams.Find(searchTeam => searchTeam.Id == id).FirstOrDefaultAsync();
+
+            var filter = Builders<Teams>.Filter.Where(team => team.Id == id);
+            var updatePerson = Builders<Teams>.Update.Pull("People", person);
+            await _teams.UpdateOneAsync(filter, updatePerson);
+
+            person.HaveTeam = false;
+            await ConsumeWebAPI.UpdateValue(person);
+
+            return new OkResult().StatusCode;
         }
     }
 }

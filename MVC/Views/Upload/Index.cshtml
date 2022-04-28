@@ -3,40 +3,49 @@
     int i = 0;
 }
 
-<h1>Create</h1>
+<h1>Selecione os times e os dados que deseja saber!</h1>
 
 <hr />
 <div class="row">
     <form asp-action="Create">
-        <div class="col">
-            <div class="form-group">
-                <label class="control-label">Times disponiveis para os servicos: </label><br />
-
-                @foreach (var team in ViewBag.Teams)
-                {
-                    <input name="checkTeamForService" type="checkbox" value=@team.Id>
-
-                    <label for="@team.Name"> @team.Name</label>
-
-                    <br />
-                }
-
-                <label class="control-label">Servicos:</label><br />
-                @foreach (var column in ViewBag.FirstLine)
-                {
-                    <input name="checkColumn" type="checkbox" value=@i id="dataOptions">
-
-                    <label for="@column.ToString()"> @column.ToString()</label>
-
-                    <br />
-                    i++;
-                }
+        @if (ViewBag.Teams == null)
+        {
+            <div class="alert alert-dismissible alert-danger">
+                <strong>Ocorreu um erro!</strong><br />Nao encontramos times disponiveis no momento!.
             </div>
-            <br />
-            <div class="form-group">
-                <input type="submit" value="Criar documento" class="btn btn-primary" onclick="GenerateDocument()" />
+        }
+        else
+        {
+            <div class="col">
+                <div class="form-group">
+
+                    <label class="control-label">Times disponiveis para os servicos: </label><br />
+                    @foreach (var team in ViewBag.Teams)
+                    {
+                        <input name="checkTeamForService" type="checkbox" value=@team.Id>
+
+                        <label for="@team.Name"> @team.Name</label>
+
+                        <br />
+                    }
+
+                    <label class="control-label">Servicos:</label><br />
+                    @foreach (var column in ViewBag.FirstLine)
+                    {
+                        <input name="checkColumn" type="checkbox" value=@i id="dataOptions">
+
+                        <label for="@column.ToString()"> @column.ToString()</label>
+
+                        <br />
+                        i++;
+                    }
+                </div>
+                <br />
+                <div class="form-group">
+                    <input type="submit" value="Criar documento" class="btn btn-primary" onclick="GenerateDocument()" />
+                </div>
             </div>
-        </div>
+        }
     </form>
 </div>
 

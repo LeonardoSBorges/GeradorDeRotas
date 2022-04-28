@@ -16,11 +16,12 @@
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            
 			<div class="form-group">
 				<label asp-for="Address" class="control-label"></label><br />
 				 <select asp-for="Address" asp-items="@(new SelectList(ViewBag.Address,"Id", "CityState"))" class="form-control" name="addressRegisterTeams"></select>
 			</div>
+
+
             <div class="form-group">
 				<label asp-for="People" class="control-label">Pessoas Disponíveis:</label><br />
                 @if (ViewBag.People != null)
@@ -33,9 +34,16 @@
                     }
                 }
             </div>
+            @if(ViewBag.Error != null){
+            
+            }
+            else
+            {
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-outline-success" />
+                <input type="submit" value="Create" class="btn btn-outline-success"/>
             </div>
+            }
+            
         </form>
     </div>
 </div>
@@ -47,3 +55,4 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+

@@ -18,9 +18,9 @@ namespace MVC.Controllers
         private static ICollection<string> firstLine = new List<string>();
         private static string serviceName;
         private static string cityId;
-        private static int allColumnsExcel;
         private static IWebHostEnvironment _hostEnvironment;
         private static string download;
+        private static ICollection<string> _errors;
         public UploadController(IWebHostEnvironment hostEnvironment)
         {
             _hostEnvironment = hostEnvironment;
@@ -50,7 +50,7 @@ namespace MVC.Controllers
 
                 int columnCep = 0, columnServices = 0, columnOs =0;
 
-                for (var column = 1; column < columnsOfFile; column++)
+                for (var column = 1; column <= columnsOfFile; column++)
                 {
                     firstLine.Add(worksheet.Cells[1, column].Value.ToString());
 
@@ -73,7 +73,7 @@ namespace MVC.Controllers
                 {
                     
                     var content = new List<string>();
-                    for (int columns = 1; columns < columnsOfFile; columns++)
+                    for (int columns = 1; columns <= columnsOfFile ; columns++)
                     {
                         if (worksheet.Cells[rows, columnServices].Value == null)
                             break;
@@ -123,9 +123,12 @@ namespace MVC.Controllers
         {
             IEnumerable<Teams> teams = await TeamsServices.GetTeamsByCity(cityId);
 
-            ViewBag.Teams = teams;
-            ViewBag.FirstLine = firstLine;
-
+            if (teams.Any())
+            {
+                ViewBag.Teams = teams;
+                var header = firstLine.Distinct().ToList();
+                ViewBag.FirstLine = header;
+            }
             return View();
         }
 
@@ -146,11 +149,35 @@ namespace MVC.Controllers
             foreach (var team in teamsForServices)
             {
                 var result = await TeamsServices.Details(team);
-                teams.Add(result.Name);
+                if (result.IsAvailable == false)
+                {
+                    teams.Add(result.Name);
+                }
+                
             }
             var addressSelected = await AddressServices.Details(cityId);
-            await MakeFileDoc.Wirte(allDocumment, teams, optionsOfDocumment, serviceName, addressSelected);
+            if(teams.Count > 0)
+                download = await MakeFileDoc.Wirte(allDocumment, teams, optionsOfDocumment, serviceName, addressSelected, _hostEnvironment.WebRootPath);
+
+            if(download.Length > 0)
+            {
+                foreach (var team in teamsForServices)
+                {
+                    var result = await TeamsServices.Details(team);
+                    await NewStatsTeam(result);
+                }
+            }
+
                 return View();
+        }
+
+        private static async Task NewStatsTeam(Teams result)
+        {
+            if (result.IsAvailable == false)
+            {
+                result.IsAvailable = true;
+                await TeamsServices.Update(result);
+            }
         }
 
         public FileContentResult Download()

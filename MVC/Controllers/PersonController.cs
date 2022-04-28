@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVC.Models;
@@ -128,8 +128,15 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
+            ViewBag.Error = null;    
             var person = await PersonServices.Details(id);
+            if (person.HaveTeam == true)
+            {
+                ViewBag.Error = "Voce nao pode excluir uma pessoa que esta em um time";
+                return View(person);
+            }
             await PersonServices.Delete(id);
+            
             return RedirectToAction(nameof(Index));
         }
 

@@ -97,7 +97,7 @@ namespace MVC.Services
             }
             foreach (var team in teams)
             {
-                if (team.Address.Id == idCityOfTeams)
+                if (team.Address.Id == idCityOfTeams && team.IsAvailable != true)
                     teamFromCity.Add(team);
             }
             return teamFromCity;
@@ -120,6 +120,25 @@ namespace MVC.Services
                 httpClient.BaseAddress = new Uri(baseUri);
 
                 var response = await httpClient.DeleteAsync("Teams/" + id);
+            }
+        }
+
+        public static async Task UpdatePersonInTeams(string id, Person person)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.BaseAddress = new Uri(baseUri);
+
+                var result = await httpClient.PutAsJsonAsync("Teams/UpdatePersonInTeams/" + id, person);
+            }
+        }
+
+        public static async Task AddPersonInTeams(string id, Person person)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.BaseAddress = new Uri(baseUri);
+                var result = await httpClient.PutAsJsonAsync("Teams/AddPersonInTeams/" + id, person);
             }
         }
     }

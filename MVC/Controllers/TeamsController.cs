@@ -77,12 +77,21 @@ namespace MVC.Controllers
 
             await TeamsServices.Create(teams);
 
+            ViewBag.Error = null;
+            if (teams.People.Count == 0)
+            {
+                ViewBag.Error = "Error";
+                return RedirectToAction(nameof(Create));
+            }
             return RedirectToAction(nameof(Index));
         }
 
         // GET: People/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
+            ViewBag.PeopleAvaliable = null;
+            ViewBag.Address = null;
+            ViewBag.PeopleTeam = null;
             if (id == null)
             {
                 return NotFound();
@@ -100,16 +109,15 @@ namespace MVC.Controllers
             ViewBag.Address = address;
             var teams = await TeamsServices.Details(id);
 
-            foreach (var peopleTeam in teams.People)
+            if (teams != null)
             {
-                hasTeam.Add(peopleTeam);
+                foreach (var peopleTeam in teams.People)
+                {
+                    hasTeam.Add(peopleTeam);
+                }
             }
 
             ViewBag.PeopleTeam = hasTeam;
-            if (teams == null)
-            {
-                return NotFound();
-            }
             return View(teams);
         }
 
@@ -127,62 +135,31 @@ namespace MVC.Controllers
             }
             teams.People = new List<Person>();
             var team = await TeamsServices.Details(teams.Id);
-            var people = team.People;
-            
             var participatingOfTeam = Request.Form["checkPeopleAvailableToAdd"].ToList();
-            var peopleHasntTeam = Request.Form["checkPeopleTeamToRemove"].ToList();
+            var removePeopleOfTeam = Request.Form["checkPeopleTeamToRemove"].ToList();
             var addressId = Request.Form["addressRegisterTeams"].ToString();
             var address = await AddressServices.Details(addressId);
 
-            if (participatingOfTeam.Count > 0 || peopleHasntTeam.Count > 0)
+            if (participatingOfTeam.Count > 0 || removePeopleOfTeam.Count > 0)
             {
-                var test = new List<Person>();  
-                foreach (var participant in participatingOfTeam)
+                List<Person> aux = new();
+                foreach (var newPersonInTeam in participatingOfTeam)
                 {
-                    var person = await PersonServices.Details(participant);
-                    teams.People.Add(person);
+                    var person = await PersonServices.Details(newPersonInTeam);
+                    await TeamsServices.AddPersonInTeams(id, person);
                 }
-                foreach(var removePerson in peopleHasntTeam)
+                foreach (var personForRemoveOfList in removePeopleOfTeam)
                 {
-                    var person = await PersonServices.Details(removePerson);
-                    test.Add(person);
-                }
-                foreach (var item in people)
-                {
-                    int count = 0;
-                    foreach (var personTeam in test)
-                        if (item.Id == personTeam.Id)
-                        {
-                            count++;
-                            personTeam.HaveTeam = false;
-                            await PersonServices.Update(personTeam);
-                        }
-
-                    if (count == 0)
-                        teams.People.Add(item);
+                    var person = await PersonServices.Details(personForRemoveOfList);
+                    await TeamsServices.UpdatePersonInTeams(id, person);
                 }
             }
+            if (!TeamsExists(teams.Id))
+            {
+                return NotFound();
+            }
+            return RedirectToAction(nameof(Index));
 
-            teams.Address = address;
-
-                try
-                {
-                    await TeamsServices.Update(teams);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TeamsExists(teams.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            
-            return View(teams);
         }
 
         // GET: People/Delete/5

@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "OperationAddress";
 }
 
@@ -8,17 +7,18 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="GetTeamsByCity">
-			<div class="form-group">
-				<label class="control-label"></label><br />
-				 <select asp-items="@(new SelectList(ViewBag.Address,"Id", "CityState"))" class="form-control" name="AddressOperationTeams"></select>
-			</div>
-            
+           
             <div class="form-group">
-				<label class="control-label">Tipos de Serviços:</label><br />
-				<select asp-items="@(new SelectList(ViewBag.Services, @ViewBag.Services))" class="form-control" name="serviceName" id="serviceName" onchange="getService()">
-					<option value="default">SELECIONE UM SERVIÇO</option>
-				</select>
-			</div>
+                <label class="control-label"></label><br />
+                <select asp-items="@(new SelectList(ViewBag.Address,"Id", "CityState"))" class="form-control" name="AddressOperationTeams"></select>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Tipos de Serviços:</label><br />
+                <select asp-items="@(new SelectList(ViewBag.Services, @ViewBag.Services))" class="form-control" name="serviceName" id="serviceName" onchange="getService()">
+                    <option value="default">SELECIONE UM SERVIÇO</option>
+                </select>
+            </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-outline-info" />
             </div>
@@ -27,5 +27,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
 }

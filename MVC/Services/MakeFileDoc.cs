@@ -10,7 +10,7 @@ namespace MVC.Services
 {
     public class MakeFileDoc
     {
-        public static async Task Wirte(IDictionary<string, List<string>> data, List<string> teamForService, List<string> columnsForServices, string nameService, Address cityService)
+        public static async Task<string> Wirte(IDictionary<string, List<string>> data, List<string> teamForService, List<string> columnsForServices, string nameService, Address cityService, string rootPath)
         {
             var header = data["OS"];
             var keys = data["KEYS"];
@@ -35,9 +35,10 @@ namespace MVC.Services
                 if (city > 0 && typeService.ToUpper().Equals(nameService, StringComparison.InvariantCultureIgnoreCase) || cityInHeader > 0)
                     allData.Add(justDataForUse);
             }
-
+            var headerForUse = allData[0];
             //string a = "a", b = "a";
             //var t = a.Equals(b, StringComparison.InvariantCultureIgnoreCase);
+            
             allData.RemoveAt(0);
             var divisionServicesForTeams = allData.Count / teamForService.Count;
             decimal restDivisionOfServicesForTeams = allData.Count % teamForService.Count;
@@ -77,8 +78,10 @@ namespace MVC.Services
                     var lineData = allData[index];
                     for (int i = 0; i < columnsForServices.Count; i++)
                     {
-                        var stringForCreateStringBuilder =  BuildingNewString(header, lineData, i).ToString();
-                        stringBuilder.Append(stringForCreateStringBuilder);
+                        var valueDataHeaderFilteredFormatted = UpdateStringWithSpecialCharacters(headerForUse[i]);
+                        var valueDataForBuilderStringFormatted = UpdateStringWithSpecialCharacters(lineData[i]);
+                        stringBuilder.Append($@"{valueDataHeaderFilteredFormatted}: {valueDataForBuilderStringFormatted}
+");
                     }
                     stringBuilder.AppendLine($@"
 ----------
@@ -94,40 +97,45 @@ namespace MVC.Services
 ");
                     for (int i = 0; i < columnsForServices.Count ; i++)
                     {
-                        var stringForCreateStringBuilder = BuildingNewString(header, lastData, i).ToString();
-                        stringBuilder.Append(stringForCreateStringBuilder);
+                        var valueDataHeaderFilteredFormatted = UpdateStringWithSpecialCharacters(headerForUse[i]);
+                        var valueDataForBuilderStringFormatted = UpdateStringWithSpecialCharacters(lastData[i]);
+                        stringBuilder.Append($@"{valueDataHeaderFilteredFormatted}: {valueDataForBuilderStringFormatted}
+");
                     }
                 }
                 else if (lastData.Count > 0)
                 {
                     for (int i = 0; i < columnsForServices.Count; i++)
                     {
-
-                        var stringForCreateStringBuilder =  BuildingNewString(header, lastData, i).ToString();
-                        stringBuilder.Append(stringForCreateStringBuilder);
+                        var valueDataHeaderFilteredFormatted = UpdateStringWithSpecialCharacters(headerForUse[i]);
+                        var valueDataForBuilderStringFormatted = UpdateStringWithSpecialCharacters(lastData[i]);
+                        stringBuilder.Append($@"{valueDataHeaderFilteredFormatted}: {valueDataForBuilderStringFormatted}
+");
                     }
                 }
             }
-
+            var pathFiles = $"{rootPath}//files";
+            if (!Directory.Exists(pathFiles))
+                Directory.CreateDirectory(pathFiles);
             string date = DateTime.Now.ToString("dd/MM/yyyy");
-            string hour = DateTime.Now.ToString("hh-mm-ss");
-            string dateTime = date.Replace("/", "") + hour.Replace("-", "");
+            string time = DateTime.Now.ToString("hh-mm-ss");
+            string dateTime = date.Replace("/", "") + time.Replace("-", "");
+            string fileName = $@"{cityService.City.ToUpper()}{dateTime}.docx";
 
-            string fileName = $@"D:\Teste\File{dateTime}.docx";
+            string pathFile = $"{pathFiles}//{fileName}";
 
-            using (StreamWriter sw = new StreamWriter(fileName))
+            await using (FileStream fileStream = new FileStream(pathFile, FileMode.Create))
             {
-   
-                sw.Write(stringBuilder.ToString());
-            }
-        }
+                
+                using (StreamWriter streamWriter = new StreamWriter(fileName))
+                {
 
-        public static string BuildingNewString(List<string> header, List<string> lineData, int i)
-        {
-            var valueDataHeaderFilteredFormatted = UpdateStringWithSpecialCharacters(header[i]);
-            var valueDataForBuilderStringFormatted = UpdateStringWithSpecialCharacters(lineData[i]);
-            return $@"
-{valueDataHeaderFilteredFormatted}: {valueDataForBuilderStringFormatted}";
+                    streamWriter.Write(stringBuilder.ToString());
+                    streamWriter.Close();
+                }
+                fileStream.Close();
+            }
+            return fileName;
         }
 
         public static string UpdateStringWithSpecialCharacters(string str)

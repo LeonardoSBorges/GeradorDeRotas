@@ -76,5 +76,18 @@ namespace TeamsGeradorDeRotas.Controllers
 
             return Ok(result);
         }
+
+        [HttpPut("UpdatePersonInTeams/{id}")]
+        public async Task<IActionResult> DeletePersonInTeam(string id, Person person)
+        {
+            var result = await _teamsServices.DeletePerson(id, person);
+            return Ok(result);
+        }
+        [HttpPut("AddPersonInTeams/{id}")]
+        public async Task<IActionResult> AddPersonInTeam(string id, Person person)
+        {
+            var result = await _teamsServices.AddPerson(id, person);
+            return Ok(result);
+        }
     }
 }
